@@ -1,3 +1,4 @@
+import router  from 'next/router'
 import { useState } from 'react'
 import http from '../components/http'
 
@@ -8,6 +9,9 @@ export default function About() {
   async function login() {
     let result = await http.post('api/auth/login',{userName,password});
     alert(result.data.msg)
+    if(result.data.success) {
+      router.push('/')
+    }
   }
   async function getUserList() {
     let result = await http.get('api/user');
