@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const http = axios.create({
-    baseURL: ''
+    baseURL: '/'
 })
 
 // 添加请求拦截器

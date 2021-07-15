@@ -1,7 +1,7 @@
 // server.js
-const { parse } = require('url')
+// const { parse } = require('url')
 const server = require('http').createServer((req, res) => {
-  const parsedUrl = parse(req.url, true)
+  // const parsedUrl = parse(req.url, true)
   handle(req, res, req.url)
 });
 const io = require('socket.io')(server)
@@ -12,7 +12,6 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 
 let userList = [];
-let count = 0;
 
 app.prepare().then(() => {
 
@@ -37,22 +36,20 @@ app.prepare().then(() => {
           });
         }
       }
-      count++;
-      console.log(count);
-      io.emit('userList', JSON.stringify(userList));
+      io.volatile.emit('userList', userList);
     })
 
-    /* socket.on('removeUser', name => {
+    socket.on('removeUser', name => {
       console.log(`${name}连接断开`);
       if (userList.map(item => item.name).includes(name)) {
         userList.splice(userList.map(item => item.name).indexOf(name), 1);
       }
-      io.emit('userList', JSON.stringify(userList));
-    }) */
+      io.emit('userList', userList);
+    })
 
     socket.on("private message", (another, msg) => {
       console.log(another);
-      socket.to(another.socketId).emit("private message", another.userName, msg);
+      socket.volatile.to(another.socketId).emit("private message", another.userName, msg);
     });
 
     socket.on('event', data => {
@@ -61,7 +58,6 @@ app.prepare().then(() => {
 
     socket.on('disconnect', (data) => {
       console.log('disconnect', data);
-      socket.close();
     });
   });
 

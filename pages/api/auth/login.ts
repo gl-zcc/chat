@@ -4,7 +4,8 @@ type NextIronRequest = NextApiRequest & { session: Session };
 
 export default withIronSession(async function login(req: NextIronRequest, res: NextApiResponse): Promise<void> {
   res.status(200)
-  if ((req.body.userName === 'zcc' || req.body.userName === 'gl') && req.body.password === 'zcc') {
+  let userList = ['zcc','admin','gl'];
+  if (userList.includes(req.body.userName) && req.body.password === 'zcc') {
     req.session.set("user", {
       id: req.body.userName,
       userName: req.body.userName,

@@ -2,7 +2,7 @@ import { withIronSession } from "next-iron-session";
 
 function handler(req: any, res: any) {
   req.session.destroy();
-  res.send("Logged out");
+  res.json({ success: true, msg: '登出成功' });
 }
 
 export default withIronSession(handler, {
