@@ -1,7 +1,4 @@
-// server.js
-// const { parse } = require('url')
 const server = require('http').createServer((req, res) => {
-  // const parsedUrl = parse(req.url, true)
   handle(req, res, req.url)
 });
 const io = require('socket.io')(server)
@@ -59,6 +56,24 @@ app.prepare().then(() => {
     socket.on('disconnect', (data) => {
       console.log('disconnect', data);
     });
+
+    socket.on('createGroup', ({groupName, selectUserList})=> {
+      let id = +new Date()
+      selectUserList.forEach(item=>io.to(item.id).emit('joinGroup', {
+        groupName,
+        id
+      }))
+    })
+
+    socket.on('joinGroup', res=>{
+      socket.join(res.id);
+      console.log("加入群组：" + res.id);
+    })
+
+    socket.on('sendGroupMsg', res=>{
+      console.log(res);
+      io.to(res.id).emit('groupMsg', res)
+    })
   });
 
 })
