@@ -8,14 +8,25 @@ yarn
 
 yarn dev
 
-Open [http://localhost:3000](http://localhost:3000)
+or
+
+npm i
+
+npm run dev
 
 ```
+访问地址 [http://localhost:3000](http://localhost:3000)
+
 
 ## TODO
 - [x] 单个对单个聊天
-- [ ] 页面UI调整
-- [ ] 接入数据库存入用户信息
+- [x] 接入数据库
+- [ ] 选择UI
+- [ ] 调整代码结构
+- [ ] 注册、登录制作
+- [ ] 单对单聊天
 - [ ] 建立群组
-- [ ] 扩展除了文本，其他类型信息发送支持
+- [ ] 群发消息
+- [ ] 解散群组
+- [ ] 其他类型消息支持
 
