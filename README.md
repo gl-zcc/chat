@@ -1,5 +1,5 @@
 # Chat
-Chat 一个简单的Web聊天程序，正在开发中 (基于 NextJS TypeScript MongoDb socketIO )
+Chat 一个简单的Web聊天程序，正在开发中 (基于 NextJS React TypeScript MongoDb socketIO )
 
 ## Getting Started
 
