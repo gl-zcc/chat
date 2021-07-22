@@ -1,4 +1,31 @@
-import Header from './components/layout/head';
+
+
+import React from 'react';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+// import ProTip from '../src/ProTip';
+// import Link from '../src/Link';
+// import Copyright from '../src/Copyright';
+
+export default function Index() {
+  return (
+    <Container maxWidth="sm">
+      <Box my={4}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Next.js example
+        </Typography>
+        {/* <Link href="/about" color="secondary">
+          Go to the about page
+        </Link>
+        <ProTip />
+        <Copyright /> */}
+      </Box>
+    </Container>
+  );
+}
+
+/* import Header from './components/layout/head';
 import styles from '../styles/Home.module.css'
 import { io } from 'socket.io-client'
 import http from './components/http';
@@ -169,3 +196,4 @@ export default function Home() {
     </div >
   )
 }
+ */
