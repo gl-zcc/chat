@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Copyright from '../components/copyright';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -6,13 +6,22 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from 'next/link';
+import Link from '@material-ui/core/Link';
+// import Link from 'next/link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import http from '../components/http';
+import router from 'next/router';
+import Snackbar, { SnackbarOrigin } from '@material-ui/core/Snackbar';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,8 +43,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export interface State extends SnackbarOrigin {
+  open: boolean;
+}
+
 export default function SignUp() {
   const classes = useStyles();
+
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [snack, setSnack] = useState({ open: false, msg: '' });
+
+  async function register() {
+    let result = await http.post('api/auth/register', { userName, password });
+    if (result.data.success) {
+      setSnack({
+        open: true,
+        msg: result.data.msg
+      })
+    } else {
+      console.log(result.data.msg)
+    }
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -52,12 +82,13 @@ export default function SignUp() {
             <Grid item xs={12}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                name="userName"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
-                label="名称"
+                id="userName"
+                value={userName} onChange={(event) => setUserName(event.target.value)}
+                label="用户名"
                 autoFocus
               />
             </Grid>
@@ -66,21 +97,11 @@ export default function SignUp() {
                 variant="outlined"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
                 name="password"
-                label="Password"
+                label="密码"
                 type="password"
                 id="password"
+                value={password} onChange={(event) => setPassword(event.target.value)}
                 autoComplete="current-password"
               />
             </Grid>
@@ -89,6 +110,7 @@ export default function SignUp() {
             fullWidth
             variant="contained"
             color="primary"
+            onClick={register}
             className={classes.submit}
           >
             注册
@@ -105,6 +127,18 @@ export default function SignUp() {
       <Box mt={5}>
         <Copyright />
       </Box>
+      <Snackbar
+        open={snack.open}
+        message={snack.msg}
+        autoHideDuration={2000}
+        onClose={() => {
+          router.push('/login', '', { shallow: true })
+        }}
+      >
+        <Alert severity="success">
+          {snack.msg}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }

@@ -1,11 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { withIronSession, Session } from "next-iron-session";
+import { connectToDatabase } from "../../../unit/mongodb";
 type NextIronRequest = NextApiRequest & { session: Session };
 
 export default withIronSession(async function login(req: NextIronRequest, res: NextApiResponse): Promise<void> {
   res.status(200)
   let userList = ['zcc','admin','gl'];
-  if (userList.includes(req.body.userName) && req.body.password === 'zcc') {
+  const { db } = await connectToDatabase();
+  const queryResult = await db.collection("user")
+    .find({
+      userName: req.body.userName,
+      password: req.body.password
+    }).toArray();
+  if (queryResult.length) {
     req.session.set("user", {
       id: req.body.userName,
       userName: req.body.userName,
