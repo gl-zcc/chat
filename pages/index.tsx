@@ -2,25 +2,69 @@
 
 import React from 'react';
 import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Avatar from '@material-ui/core/Avatar';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Divider from '@material-ui/core/Divider';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 // import ProTip from '../src/ProTip';
 // import Link from '../src/Link';
 // import Copyright from '../src/Copyright';
 
 export default function Index() {
   return (
-    <Container maxWidth="sm">
-      <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Next.js example
-        </Typography>
-        {/* <Link href="/about" color="secondary">
-          Go to the about page
-        </Link>
-        <ProTip />
-        <Copyright /> */}
-      </Box>
+    <Container className={'chat'} maxWidth="md">
+      <Grid container>
+        <Grid item xs={1}>
+          <div className={'user-info'}>
+            <Avatar alt="zcc" src="" />
+            <div className={'status normal'}></div>
+          </div>
+        </Grid>
+        <Grid className={'user-list'} item xs={3}>
+          <List>
+            <ListItem alignItems="flex-start">
+              <ListItemAvatar>
+                <Avatar alt="Remy Sharp" src="" />
+              </ListItemAvatar>
+              <ListItemText
+                primary="zzc"
+              />
+            </ListItem>
+            <Divider variant="inset" component="li" />
+            <ListItem alignItems="flex-start">
+              <ListItemAvatar>
+                <Avatar alt="Travis Howard" src="" />
+              </ListItemAvatar>
+              <ListItemText
+                primary="Summer"
+              />
+            </ListItem>
+            <Divider variant="inset" component="li" />
+            <ListItem alignItems="flex-start">
+              <ListItemAvatar>
+                <Avatar alt="Cindy Baker" src="" />
+              </ListItemAvatar>
+              <ListItemText
+                primary="Oui"
+              />
+            </ListItem>
+          </List>
+        </Grid>
+        <Grid item xs={8}>
+          <div className={'message'}>
+
+          </div>
+          <div className={'send-info'}>
+
+          </div>
+
+        </Grid>
+      </Grid>
     </Container>
   );
 }

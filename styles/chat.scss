@@ -1,8 +1,52 @@
-ul {
-  list-style: none;
-  width: 200px;
+.chat {
+  height: 400px;
+  margin-top: 20px;
 
-  li {
-    border: 1px solid;
+  .MuiGrid-container {
+    border: 1px solid gray !important;
   }
+
+  .user-info {
+    width: 100%;
+    height: 100%;
+    height: 600px;
+    background: #2e2e2e;
+    padding-top: 10px;
+
+    .MuiAvatar-root {
+      margin-left: 16px;
+    }
+
+    .status {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      margin-top: 10px;
+      margin-left: 26px;
+    }
+
+    .normal{
+      background-color: chartreuse;
+    }
+
+    .offline {
+      background-color:darkgrey;
+    }
+  }
+
+  .user-list {
+    border-right: 1px solid gray;
+  }
+
+  .message {
+    width: 100%;
+    height: 400px;
+  }
+
+  .send-info{
+    width: 100%;
+    height: 200px;
+    border-top: 1px solid gray;
+  }
+
 }
