@@ -10,7 +10,7 @@ import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Typography from '@material-ui/core/Typography';
+import InputBase from '@material-ui/core/InputBase';
 // import ProTip from '../src/ProTip';
 // import Link from '../src/Link';
 // import Copyright from '../src/Copyright';
@@ -21,36 +21,24 @@ export default function Index() {
       <Grid container>
         <Grid item xs={1}>
           <div className={'user-info'}>
-            <Avatar alt="zcc" src="" />
+            <Avatar variant="rounded" alt="zcc" src="" />
             <div className={'status normal'}></div>
           </div>
         </Grid>
         <Grid className={'user-list'} item xs={3}>
+          <div className={'search-view'}>
+            <InputBase className={'search-input'} placeholder="搜索" />
+          </div>
           <List>
-            <ListItem alignItems="flex-start">
+            <ListItem
+              button
+              alignItems="flex-start">
               <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src="" />
+                <Avatar variant="rounded" alt="" src="" />
               </ListItemAvatar>
               <ListItemText
-                primary="zzc"
-              />
-            </ListItem>
-            <Divider variant="inset" component="li" />
-            <ListItem alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar alt="Travis Howard" src="" />
-              </ListItemAvatar>
-              <ListItemText
-                primary="Summer"
-              />
-            </ListItem>
-            <Divider variant="inset" component="li" />
-            <ListItem alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar alt="Cindy Baker" src="" />
-              </ListItemAvatar>
-              <ListItemText
-                primary="Oui"
+                primary="聪聪"
+                secondary="你好"
               />
             </ListItem>
           </List>

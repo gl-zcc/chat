@@ -34,6 +34,23 @@
     }
   }
 
+  .search-view {
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid gray;
+    text-align: center;
+
+    .search-input {
+      border: 1px solid gray;
+      border-radius: 6px;
+      height: 30px;
+      margin-top: 10px;
+      font-size: 12px;
+      width: 90%;
+      padding: 0 6px;
+    }
+  }
+
   .user-list {
     border-right: 1px solid gray;
   }
