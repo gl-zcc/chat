@@ -1,6 +1,6 @@
 
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -12,11 +12,17 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import InputBase from '@material-ui/core/InputBase';
 import Button from '@material-ui/core/Button';
-// import ProTip from '../src/ProTip';
-// import Link from '../src/Link';
-// import Copyright from '../src/Copyright';
+
+import viewInit from '../src/viewInit'
 
 export default function Index() {
+
+  useEffect(() => {
+    viewInit()
+    return () => {
+    };
+  }, []);
+
   return (
     <Container className={'chat'} maxWidth="md">
       <Grid container>
@@ -46,6 +52,70 @@ export default function Index() {
         </Grid>
         <Grid item xs={8}>
           <div className={'message'}>
+            <div className={'msg-left'}>
+              <Avatar style={{
+                float: 'left'
+              }} variant="rounded" alt="zcc" src="" />
+              <div className={'msg-content'}>
+                消息1消息1消息1消息1消息1消息1消息1
+              </div>
+            </div>
+            <div className={'msg-right'}>
+              <Avatar style={{
+                float: 'right'
+              }} variant="rounded" alt="zcc" src="" />
+              <div className={'msg-content'}>
+                消息1消息1消息1消息1消息1消息1消息1
+              </div>
+            </div>
+            <div className={'msg-left'}>
+              <Avatar style={{
+                float: 'left'
+              }} variant="rounded" alt="zcc" src="" />
+              <div className={'msg-content'}>
+                消息1消息1消息1消息1消息1消息1消息1
+              </div>
+            </div>
+            <div className={'msg-right'}>
+              <Avatar style={{
+                float: 'right'
+              }} variant="rounded" alt="zcc" src="" />
+              <div className={'msg-content'}>
+                消息1消息1消息1消息1消息1消息1消息1
+              </div>
+            </div>
+            <div className={'msg-left'}>
+              <Avatar style={{
+                float: 'left'
+              }} variant="rounded" alt="zcc" src="" />
+              <div className={'msg-content'}>
+                消息1消息1消息1消息1消息1消息1消息1
+              </div>
+            </div>
+            <div className={'msg-right'}>
+              <Avatar style={{
+                float: 'right'
+              }} variant="rounded" alt="zcc" src="" />
+              <div className={'msg-content'}>
+                消息1消息1消息1消息1消息1消息1消息1
+              </div>
+            </div>
+            <div className={'msg-left'}>
+              <Avatar style={{
+                float: 'left'
+              }} variant="rounded" alt="zcc" src="" />
+              <div className={'msg-content'}>
+                消息1消息1消息1消息1消息1消息1消息1
+              </div>
+            </div>
+            <div className={'msg-right'}>
+              <Avatar style={{
+                float: 'right'
+              }} variant="rounded" alt="zcc" src="" />
+              <div className={'msg-content'}>
+                消息1消息1消息1消息1消息1消息1消息1
+              </div>
+            </div>
             <div className={'msg-left'}>
               <Avatar style={{
                 float: 'left'
