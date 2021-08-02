@@ -11,6 +11,7 @@ import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import InputBase from '@material-ui/core/InputBase';
+import Button from '@material-ui/core/Button';
 // import ProTip from '../src/ProTip';
 // import Link from '../src/Link';
 // import Copyright from '../src/Copyright';
@@ -45,10 +46,34 @@ export default function Index() {
         </Grid>
         <Grid item xs={8}>
           <div className={'message'}>
-
+            <div className={'msg-left'}>
+              <Avatar style={{
+                float: 'left'
+              }} variant="rounded" alt="zcc" src="" />
+              <div className={'msg-content'}>
+                消息1消息1消息1消息1消息1消息1消息1
+              </div>
+            </div>
+            <div className={'msg-right'}>
+              <Avatar style={{
+                float: 'right'
+              }} variant="rounded" alt="zcc" src="" />
+              <div className={'msg-content'}>
+                消息1消息1消息1消息1消息1消息1消息1
+              </div>
+            </div>
           </div>
           <div className={'send-info'}>
-
+            <textarea style={{
+              width: '100%'
+            }} name="" id="" cols="30" rows="10"></textarea>
+            <div style={{
+              float: 'right'
+            }}>
+              <Button variant="contained" color="primary">
+                发送
+              </Button>
+            </div>
           </div>
 
         </Grid>
