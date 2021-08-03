@@ -55,6 +55,13 @@
     border-right: 1px solid gray;
   }
 
+  .msg-header {
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid gray;
+    padding-left: 10px;
+  }
+
   .message {
     width: 100%;
     height: 400px;

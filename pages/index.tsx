@@ -1,6 +1,4 @@
-
-
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -14,12 +12,49 @@ import InputBase from '@material-ui/core/InputBase';
 import Button from '@material-ui/core/Button';
 
 import viewInit from '../src/viewInit'
+import { message, cancelMessage, sendMsg } from '../src/message';
+
+type UserInfo = {
+  id: string,
+  name: string
+}
 
 export default function Index() {
 
+  const [userList, setUserList] = useState<UserInfo[]>([])
+  const [receiveUser, setReceiveUser] = useState({
+    id: '',
+    userName: ''
+  })
+  const [curUser, setCurUser] = useState({
+    id: '',
+    userName: ''
+  })
+  const [msg, setMsg] = useState({})
+  const [sendText, setSendText] = useState('')
+
   useEffect(() => {
     viewInit()
+    message({
+      getCurUser: (res: any) => {
+        setCurUser({
+          id: '',
+          userName: res
+        })
+      },
+      getUserList: (res: any) => {
+        setUserList(res)
+      },
+      receiveMsg: (msg: any) => {
+        console.log(msg)
+        if (!msg[receiveUser.id]) {
+          msg[receiveUser.id] = [];
+        }
+        msg[receiveUser.id].push(msg);
+      }
+    });
     return () => {
+      cancelMessage();
     };
   }, []);
 
@@ -37,22 +72,51 @@ export default function Index() {
             <InputBase className={'search-input'} placeholder="搜索" />
           </div>
           <List>
-            <ListItem
-              button
-              alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar variant="rounded" alt="" src="" />
-              </ListItemAvatar>
-              <ListItemText
-                primary="聪聪"
-                secondary="你好"
-              />
-            </ListItem>
+            {
+              userList.map(item =>
+                <ListItem key={item.id}
+                  button
+                  onClick={() =>
+                    setReceiveUser({
+                      id: item.id,
+                      userName: item.name
+                    })
+                  }
+                  alignItems="flex-start">
+                  <ListItemAvatar>
+                    <Avatar variant="rounded" alt="" src="" />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={item.name}
+                    secondary=""
+                  />
+                </ListItem>
+              )
+            }
           </List>
         </Grid>
         <Grid item xs={8}>
+          <div className={'msg-header'}>
+            {receiveUser.userName}
+          </div>
           <div className={'message'}>
-            <div className={'msg-left'}>
+            {msg[receiveUser.id]?.map((item: any, key: number) => {
+              const direction = item.sendUser === curUser.userName ? 'right' : 'left'
+              return (<div key={key} className={`msg-${direction}`}>
+                <Avatar style={{
+                  float: direction
+                }} variant="rounded" alt="" src="" />
+                <div style={{
+                  textAlign: direction
+                }} className={'msg-user'}>
+                  {item.sendUser}
+                </div>
+                <div className={'msg-content'}>
+                  {item.sendText}
+                </div>
+              </div>)
+            })}
+            {/* <div className={'msg-left'}>
               <Avatar style={{
                 float: 'left'
               }} variant="rounded" alt="zcc" src="" />
@@ -131,16 +195,32 @@ export default function Index() {
               <div className={'msg-content'}>
                 消息1消息1消息1消息1消息1消息1消息1
               </div>
-            </div>
+            </div> */}
           </div>
           <div className={'send-info'}>
-            <textarea style={{
-              width: '100%'
-            }} name="" id="" cols="30" rows="10"></textarea>
+            <textarea
+              value={sendText}
+              onChange={e => setSendText(e.target.value)}
+              style={{
+                width: '100%'
+              }} name="" id="" cols="30" rows="10"></textarea>
             <div style={{
               float: 'right'
             }}>
-              <Button variant="contained" color="primary">
+              <Button onClick={e => {
+                let sendInfo = {
+                  sendText,
+                  receiveId: receiveUser.id,
+                  receiveUser: receiveUser.userName,
+                  sendUser: curUser.userName
+                }
+                sendMsg(sendInfo);
+                if (!msg[receiveUser.id]) {
+                  msg[receiveUser.id] = [];
+                }
+                msg[receiveUser.id].push(sendInfo);
+                setMsg(msg);
+              }} variant="contained" color="primary">
                 发送
               </Button>
             </div>

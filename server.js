@@ -44,9 +44,9 @@ app.prepare().then(() => {
       io.emit('userList', userList);
     })
 
-    socket.on("private message", (another, msg) => {
-      console.log(another);
-      socket.volatile.to(another.socketId).emit("private message", another.userName, msg);
+    socket.on("private message", (msg) => {
+      console.log(msg);
+      socket.volatile.to(msg.receiveId).emit("private message", msg);
     });
 
     socket.on('event', data => {
