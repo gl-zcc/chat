@@ -12,24 +12,26 @@ let userList = [];
 
 app.prepare().then(() => {
 
-  server.listen(3000, (err) => {
+  server.listen(3333, (err) => {
     if (err) throw err
-    console.log('> Ready on http://localhost:3000')
+    console.log('> Ready on http://localhost:3333')
   })
 
   io.on('connection', socket => {
-    socket.on('userName', name => {
-      console.log(`${name}连接进来`);
-      if (name) {
-        if(!userList.map(item => item.name).includes(name)) {
+    socket.on('connectUser', user => {
+      console.log(`${user.userName}连接进来`);
+      if (user) {
+        if (!userList.map(item => item.id).includes(user.id)) {
           userList.unshift({
-            name,
-            id: socket.id
+            userName: user.userName,
+            userId: user.id,
+            socketId: socket.id
           });
         } else {
-          userList.splice(userList.map(item => item.name).indexOf(name), 1,{
-            name,
-            id: socket.id
+          userList.splice(userList.map(item => item.id).indexOf(user.id), 1, {
+            userName: user.userName,
+            userId: user.id,
+            socketId: socket.id
           });
         }
       }
@@ -57,20 +59,20 @@ app.prepare().then(() => {
       console.log('disconnect', data);
     });
 
-    socket.on('createGroup', ({groupName, selectUserList})=> {
+    socket.on('createGroup', ({ groupName, selectUserList }) => {
       let id = +new Date()
-      selectUserList.forEach(item=>io.to(item.id).emit('joinGroup', {
+      selectUserList.forEach(item => io.to(item.id).emit('joinGroup', {
         groupName,
         id
       }))
     })
 
-    socket.on('joinGroup', res=>{
+    socket.on('joinGroup', res => {
       socket.join(res.id);
       console.log("加入群组：" + res.id);
     })
 
-    socket.on('sendGroupMsg', res=>{
+    socket.on('sendGroupMsg', res => {
       console.log(res);
       io.to(res.id).emit('groupMsg', res)
     })

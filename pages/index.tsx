@@ -31,6 +31,7 @@ export default function Index() {
     userName: ''
   })
   const [msg, setMsg] = useState({})
+  const [curMsg, setCurMsg] = useState([])
   const [sendText, setSendText] = useState('')
 
   useEffect(() => {
@@ -38,19 +39,19 @@ export default function Index() {
     message({
       getCurUser: (res: any) => {
         setCurUser({
-          id: '',
-          userName: res
+          id: res.id,
+          userName: res.userName
         })
       },
       getUserList: (res: any) => {
         setUserList(res)
       },
       receiveMsg: (msg: any) => {
-        console.log(msg)
-        if (!msg[receiveUser.id]) {
-          msg[receiveUser.id] = [];
+        if (!msg[msg.receiveId]) {
+          msg[msg.receiveId] = [];
         }
-        msg[receiveUser.id].push(msg);
+        msg[msg.receiveId].push(msg);
+        setMsg(msg);
       }
     });
     return () => {
@@ -76,12 +77,14 @@ export default function Index() {
               userList.map(item =>
                 <ListItem key={item.id}
                   button
-                  onClick={() =>
+                  onClick={() => {
                     setReceiveUser({
                       id: item.id,
                       userName: item.name
                     })
-                  }
+                    console.log(item.id, msg, msg, msg[item.id]);
+                    setCurMsg(msg[item.id] ? msg[item.id] : [])
+                  }}
                   alignItems="flex-start">
                   <ListItemAvatar>
                     <Avatar variant="rounded" alt="" src="" />
@@ -100,7 +103,7 @@ export default function Index() {
             {receiveUser.userName}
           </div>
           <div className={'message'}>
-            {msg[receiveUser.id]?.map((item: any, key: number) => {
+            {curMsg.map((item: any, key: number) => {
               const direction = item.sendUser === curUser.userName ? 'right' : 'left'
               return (<div key={key} className={`msg-${direction}`}>
                 <Avatar style={{
@@ -212,14 +215,17 @@ export default function Index() {
                   sendText,
                   receiveId: receiveUser.id,
                   receiveUser: receiveUser.userName,
-                  sendUser: curUser.userName
+                  sendUser: curUser.userName,
+                  sendUserId: curUser.id
                 }
                 sendMsg(sendInfo);
                 if (!msg[receiveUser.id]) {
                   msg[receiveUser.id] = [];
                 }
                 msg[receiveUser.id].push(sendInfo);
+                curMsg.push(sendInfo);
                 setMsg(msg);
+                setCurMsg(curMsg.slice());
               }} variant="contained" color="primary">
                 发送
               </Button>

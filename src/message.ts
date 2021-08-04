@@ -9,8 +9,8 @@ function message(props: any) {
   async function getUser() {
     let res = await http('api/user');
     if (res.data.user) {
-      socket.emit('userName', res.data.user?.userName);
-      props.getCurUser(res.data.user?.userName);
+      socket.emit('connectUser', res.data.user);
+      props.getCurUser(res.data.user);
     } else {
       router.push('/login')
     }
