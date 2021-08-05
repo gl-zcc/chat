@@ -12,11 +12,13 @@ import InputBase from '@material-ui/core/InputBase';
 import Button from '@material-ui/core/Button';
 
 import viewInit from '../src/viewInit'
+import { displayBottom } from '../src/common'
 import { message, cancelMessage, sendMsg } from '../src/message';
 
 type UserInfo = {
-  id: string,
-  name: string
+  userId: string
+  userName: string
+  socketId: string
 }
 
 export default function Index() {
@@ -24,7 +26,8 @@ export default function Index() {
   const [userList, setUserList] = useState<UserInfo[]>([])
   const [receiveUser, setReceiveUser] = useState({
     id: '',
-    userName: ''
+    userName: '',
+    toSockedId: ''
   })
   const [curUser, setCurUser] = useState({
     id: '',
@@ -45,13 +48,21 @@ export default function Index() {
       },
       getUserList: (res: any) => {
         setUserList(res)
+        console.log(res)
       },
-      receiveMsg: (msg: any) => {
-        if (!msg[msg.receiveId]) {
-          msg[msg.receiveId] = [];
+      receiveMsg: (res: any) => {
+        console.log(res);
+        if (!msg[res.sendUserId]) {
+          msg[res.sendUserId] = [];
         }
-        msg[msg.receiveId].push(msg);
+        msg[res.sendUserId].push(res);
         setMsg(msg);
+        if (res.sendUserId === receiveUser.id) {
+          curMsg.push(res);
+          setCurMsg(curMsg.slice());
+          displayBottom();
+        }
+        console.log(msg, curMsg, res.sendUserId, receiveUser.id);
       }
     });
     return () => {
@@ -75,22 +86,23 @@ export default function Index() {
           <List>
             {
               userList.map(item =>
-                <ListItem key={item.id}
+                <ListItem key={item.userId}
                   button
                   onClick={() => {
                     setReceiveUser({
-                      id: item.id,
-                      userName: item.name
+                      id: item.userId,
+                      userName: item.userName,
+                      toSockedId: item.socketId
                     })
-                    console.log(item.id, msg, msg, msg[item.id]);
-                    setCurMsg(msg[item.id] ? msg[item.id] : [])
+                    console.log(receiveUser, item.userId);
+                    setCurMsg(msg[item.userId] ? msg[item.userId] : [])
                   }}
                   alignItems="flex-start">
                   <ListItemAvatar>
                     <Avatar variant="rounded" alt="" src="" />
                   </ListItemAvatar>
                   <ListItemText
-                    primary={item.name}
+                    primary={item.userName}
                     secondary=""
                   />
                 </ListItem>
@@ -104,7 +116,7 @@ export default function Index() {
           </div>
           <div className={'message'}>
             {curMsg.map((item: any, key: number) => {
-              const direction = item.sendUser === curUser.userName ? 'right' : 'left'
+              const direction = item.sendUserId === curUser.id ? 'right' : 'left'
               return (<div key={key} className={`msg-${direction}`}>
                 <Avatar style={{
                   float: direction
@@ -119,86 +131,6 @@ export default function Index() {
                 </div>
               </div>)
             })}
-            {/* <div className={'msg-left'}>
-              <Avatar style={{
-                float: 'left'
-              }} variant="rounded" alt="zcc" src="" />
-              <div className={'msg-content'}>
-                消息1消息1消息1消息1消息1消息1消息1
-              </div>
-            </div>
-            <div className={'msg-right'}>
-              <Avatar style={{
-                float: 'right'
-              }} variant="rounded" alt="zcc" src="" />
-              <div className={'msg-content'}>
-                消息1消息1消息1消息1消息1消息1消息1
-              </div>
-            </div>
-            <div className={'msg-left'}>
-              <Avatar style={{
-                float: 'left'
-              }} variant="rounded" alt="zcc" src="" />
-              <div className={'msg-content'}>
-                消息1消息1消息1消息1消息1消息1消息1
-              </div>
-            </div>
-            <div className={'msg-right'}>
-              <Avatar style={{
-                float: 'right'
-              }} variant="rounded" alt="zcc" src="" />
-              <div className={'msg-content'}>
-                消息1消息1消息1消息1消息1消息1消息1
-              </div>
-            </div>
-            <div className={'msg-left'}>
-              <Avatar style={{
-                float: 'left'
-              }} variant="rounded" alt="zcc" src="" />
-              <div className={'msg-content'}>
-                消息1消息1消息1消息1消息1消息1消息1
-              </div>
-            </div>
-            <div className={'msg-right'}>
-              <Avatar style={{
-                float: 'right'
-              }} variant="rounded" alt="zcc" src="" />
-              <div className={'msg-content'}>
-                消息1消息1消息1消息1消息1消息1消息1
-              </div>
-            </div>
-            <div className={'msg-left'}>
-              <Avatar style={{
-                float: 'left'
-              }} variant="rounded" alt="zcc" src="" />
-              <div className={'msg-content'}>
-                消息1消息1消息1消息1消息1消息1消息1
-              </div>
-            </div>
-            <div className={'msg-right'}>
-              <Avatar style={{
-                float: 'right'
-              }} variant="rounded" alt="zcc" src="" />
-              <div className={'msg-content'}>
-                消息1消息1消息1消息1消息1消息1消息1
-              </div>
-            </div>
-            <div className={'msg-left'}>
-              <Avatar style={{
-                float: 'left'
-              }} variant="rounded" alt="zcc" src="" />
-              <div className={'msg-content'}>
-                消息1消息1消息1消息1消息1消息1消息1
-              </div>
-            </div>
-            <div className={'msg-right'}>
-              <Avatar style={{
-                float: 'right'
-              }} variant="rounded" alt="zcc" src="" />
-              <div className={'msg-content'}>
-                消息1消息1消息1消息1消息1消息1消息1
-              </div>
-            </div> */}
           </div>
           <div className={'send-info'}>
             <textarea
@@ -206,13 +138,14 @@ export default function Index() {
               onChange={e => setSendText(e.target.value)}
               style={{
                 width: '100%'
-              }} name="" id="" cols="30" rows="10"></textarea>
+              }} name="" id="" cols="30" rows="8"></textarea>
             <div style={{
               float: 'right'
             }}>
               <Button onClick={e => {
                 let sendInfo = {
                   sendText,
+                  toSockedId: receiveUser.toSockedId,
                   receiveId: receiveUser.id,
                   receiveUser: receiveUser.userName,
                   sendUser: curUser.userName,
@@ -226,6 +159,7 @@ export default function Index() {
                 curMsg.push(sendInfo);
                 setMsg(msg);
                 setCurMsg(curMsg.slice());
+                displayBottom();
               }} variant="contained" color="primary">
                 发送
               </Button>

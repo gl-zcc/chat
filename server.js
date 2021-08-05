@@ -21,14 +21,14 @@ app.prepare().then(() => {
     socket.on('connectUser', user => {
       console.log(`${user.userName}连接进来`);
       if (user) {
-        if (!userList.map(item => item.id).includes(user.id)) {
+        if (!userList.map(item => item.userId).includes(user.id)) {
           userList.unshift({
             userName: user.userName,
             userId: user.id,
             socketId: socket.id
           });
         } else {
-          userList.splice(userList.map(item => item.id).indexOf(user.id), 1, {
+          userList.splice(userList.map(item => item.userId).indexOf(user.id), 1, {
             userName: user.userName,
             userId: user.id,
             socketId: socket.id
@@ -48,7 +48,7 @@ app.prepare().then(() => {
 
     socket.on("private message", (msg) => {
       console.log(msg);
-      socket.volatile.to(msg.receiveId).emit("private message", msg);
+      socket.volatile.to(msg.toSockedId).emit("private message", msg);
     });
 
     socket.on('event', data => {
