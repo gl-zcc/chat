@@ -13,7 +13,12 @@ import Button from '@material-ui/core/Button';
 
 import viewInit from '../src/viewInit'
 import { displayBottom } from '../src/common'
-import { message, cancelMessage, sendMsg } from '../src/message';
+// import { message, cancelMessage, sendMsg } from '../src/message';
+import http from '../pages/components/http'
+import { io } from 'socket.io-client'
+import router from 'next/router'
+
+const socket = io();
 
 type UserInfo = {
   userId: string
@@ -24,51 +29,52 @@ type UserInfo = {
 export default function Index() {
 
   const [userList, setUserList] = useState<UserInfo[]>([])
-  const [receiveUser, setReceiveUser] = useState({
-    id: '',
-    userName: '',
-    toSockedId: ''
-  })
-  const [curUser, setCurUser] = useState({
-    id: '',
-    userName: ''
-  })
+  const [receiveUser, setReceiveUser] = useState({})
+  const [curUser, setCurUser] = useState({})
   const [msg, setMsg] = useState({})
   const [curMsg, setCurMsg] = useState([])
   const [sendText, setSendText] = useState('')
 
+
   useEffect(() => {
     viewInit()
-    message({
-      getCurUser: (res: any) => {
+    async function getUser() {
+      let res = await http('api/user');
+      if (res.data.user) {
+        socket.emit('connectUser', res.data.user);
         setCurUser({
-          id: res.id,
-          userName: res.userName
+          id: res.data.user.id,
+          userName: res.data.user.userName
         })
-      },
-      getUserList: (res: any) => {
-        setUserList(res)
-        console.log(res)
-      },
-      receiveMsg: (res: any) => {
-        console.log(res);
-        if (!msg[res.sendUserId]) {
-          msg[res.sendUserId] = [];
-        }
-        msg[res.sendUserId].push(res);
-        setMsg(msg);
-        if (res.sendUserId === receiveUser.id) {
-          curMsg.push(res);
-          setCurMsg(curMsg.slice());
-          displayBottom();
-        }
-        console.log(msg, curMsg, res.sendUserId, receiveUser.id);
+      } else {
+        router.push('/login')
       }
-    });
+    }
+    getUser()
+    socket.on('userList', res => {
+      setUserList(res)
+    })
+    socket.on('private message', (res) => {
+      console.log(res, receiveUser);
+      if (!msg[res.sendUserId]) {
+        msg[res.sendUserId] = [];
+      }
+      msg[res.sendUserId].push(res);
+      setMsg(msg);
+      if (res.sendUserId === receiveUser.id) {
+        curMsg.push(res);
+        setCurMsg(curMsg.slice());
+        displayBottom();
+      }
+      console.log(msg, curMsg);
+    })
     return () => {
-      cancelMessage();
+      socket.off('userList');
+      socket.off('joinGroup');
+      socket.off('groupMsg');
+      socket.off('private message');
     };
-  }, []);
+  }, [receiveUser,curMsg, msg]);
 
   return (
     <Container className={'chat'} maxWidth="md">
@@ -94,7 +100,9 @@ export default function Index() {
                       userName: item.userName,
                       toSockedId: item.socketId
                     })
-                    console.log(receiveUser, item.userId);
+                    setTimeout(function () {
+                      console.log(receiveUser, item.userId);
+                    }, 2000)
                     setCurMsg(msg[item.userId] ? msg[item.userId] : [])
                   }}
                   alignItems="flex-start">
@@ -151,7 +159,7 @@ export default function Index() {
                   sendUser: curUser.userName,
                   sendUserId: curUser.id
                 }
-                sendMsg(sendInfo);
+                socket.emit('private message', sendInfo)
                 if (!msg[receiveUser.id]) {
                   msg[receiveUser.id] = [];
                 }
