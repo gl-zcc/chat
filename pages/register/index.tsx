@@ -4,10 +4,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
-// import Link from 'next/link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -18,6 +15,7 @@ import http from '../components/http';
 import router from 'next/router';
 import Snackbar, { SnackbarOrigin } from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import { Alart as AlartType } from '../../src/type'
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -53,18 +51,32 @@ export default function SignUp() {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
-  const [snack, setSnack] = useState({ open: false, msg: '' });
+  const [snack, setSnack] = useState<AlartType>({ open: false, msg: '', severity: 'success' });
+  const [btnState, setBtnState] = useState({ disabled: false, text: '注册' });
 
   async function register() {
+    setBtnState({
+      disabled: true,
+      text: '注册中...'
+    })
     let result = await http.post('api/auth/register', { userName, password });
     if (result.data.success) {
       setSnack({
         open: true,
-        msg: result.data.msg
+        msg: result.data.msg,
+        severity: 'success'
       })
     } else {
-      console.log(result.data.msg)
+      setSnack({
+        open: true,
+        msg: result.data.msg,
+        severity: 'error'
+      })
     }
+    setBtnState({
+      disabled: false,
+      text: '注册'
+    })
   }
 
   return (
@@ -110,10 +122,11 @@ export default function SignUp() {
             fullWidth
             variant="contained"
             color="primary"
+            disabled={btnState.disabled}
             onClick={register}
             className={classes.submit}
           >
-            注册
+            {btnState.text}
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
@@ -135,7 +148,7 @@ export default function SignUp() {
           router.push('/login', '', { shallow: true })
         }}
       >
-        <Alert severity="success">
+        <Alert severity={snack.severity}>
           {snack.msg}
         </Alert>
       </Snackbar>

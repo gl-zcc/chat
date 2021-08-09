@@ -1,36 +1,3 @@
-/* import Header from '../components/layout/head';
-import router from 'next/router'
-import { useState } from 'react'
-import http from '../components/http'
-import Button from '@material-ui/core/Button';
-
-
-export default function About() {
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  async function login() {
-    let result = await http.post('api/auth/login', { userName, password });
-    alert(result.data.msg)
-    if (result.data.success) {
-      router.push('/','',{shallow:true})
-    }
-  }
-  return (
-    <div>
-      <Header />
-      <Button variant="contained" color="primary">
-      你好，世界
-    </Button>
-      <input value={userName} onChange={(event) => setUserName(event.target.value)} />
-      <br />
-      <input type='password' value={password} onChange={(event) => setPassword(event.target.value)} />
-      <br />
-      <button onClick={login}>登录</button>
-    </div>
-  )
-}
- */
-
 import Header from '../components/layout/head';
 import Copyright from '../components/copyright';
 import router from 'next/router'
@@ -43,15 +10,15 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
-// import Link from 'next/link'
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Snackbar, { SnackbarOrigin } from '@material-ui/core/Snackbar';
+import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import {Alart as AlartType} from '../../src/type'
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -83,9 +50,14 @@ export default function SignIn() {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
-  const [snack, setSnack] = useState({ open: false, msg: '', severity: 'success' });
+  const [snack, setSnack] = useState<AlartType>({ open: false, msg: '', severity: 'success' });
+  const [btnState, setBtnState] = useState({ disabled: false, text: '登录' });
 
   async function login() {
+    setBtnState({
+      disabled: true,
+      text: '登录中...'
+    })
     let result = await http.post('api/auth/login', { userName, password });
     if (result.data.success) {
       setSnack({
@@ -101,10 +73,14 @@ export default function SignIn() {
         severity: 'error'
       })
     }
+    setBtnState({
+      disabled: false,
+      text: '登录'
+    })
   }
   return (
     <Container component="main" maxWidth="xs">
-      {/* <Header /> */}
+      <Header title="登录" />
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -145,11 +121,12 @@ export default function SignIn() {
           <Button
             fullWidth
             variant="contained"
+            disabled={btnState.disabled}
             color="primary"
             onClick={login}
             className={classes.submit}
           >
-            登录
+            {btnState.text}
           </Button>
           <Grid container>
             <Grid item xs>

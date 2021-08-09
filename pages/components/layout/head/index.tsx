@@ -1,9 +1,13 @@
 import Head from 'next/head'
 
-export default function Header() {
+type Props = {
+  title: string
+}
+
+export default function Header(props: Props) {
   return (
     <Head>
-      <title>Chat</title>
+      <title>{props.title}</title>
       <meta name="description" content="Chat" />
       <meta
         name="viewport"
