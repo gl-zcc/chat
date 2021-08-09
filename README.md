@@ -1,6 +1,9 @@
 # Chat
 Chat 一个简单的Web聊天程序，正在开发中 (基于 NextJS React TypeScript MongoDb socketIO )
 
+![image](doc/images/login.png)
+![image](doc/images/main.png)
+
 ## Getting Started
 
 ```bash
@@ -15,7 +18,7 @@ npm i
 npm run dev
 
 ```
-访问地址 [http://localhost:3000](http://localhost:3000)
+访问地址 [http://localhost:3333](http://localhost:3333)
 
 
 
