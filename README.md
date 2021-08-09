@@ -1,8 +1,8 @@
 # Chat
 Chat 一个简单的Web聊天程序，正在开发中 (基于 NextJS React TypeScript MongoDb socketIO )
 
-<img width=200 src="doc/images/login.png" />
-<img width=200 src="doc/images/main.png" />
+<img width=300 style="float:left;" src="doc/images/login.png" />
+<img width=300 src="doc/images/main.png" />
 
 ## Getting Started
 
