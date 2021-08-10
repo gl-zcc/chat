@@ -5,7 +5,6 @@ type NextIronRequest = NextApiRequest & { session: Session };
 
 export default withIronSession(async function login(req: NextIronRequest, res: NextApiResponse): Promise<void> {
   res.status(200)
-  let userList = ['zcc','admin','gl'];
   const { db } = await connectToDatabase();
   const queryResult = await db.collection("user")
     .find({

@@ -37,21 +37,9 @@ export default function Index() {
     sendText: ''
   })
 
+
   useEffect(() => {
     viewInit()
-    async function getUser() {
-      let res = await http('api/user');
-      if (res.data.user) {
-        socket.emit('connectUser', res.data.user);
-        setCurUser({
-          id: res.data.user.id,
-          userName: res.data.user.userName
-        })
-      } else {
-        router.push('/login')
-      }
-    }
-    getUser()
     socket.on('userList', res => {
       setUserList(res)
     })
@@ -72,6 +60,46 @@ export default function Index() {
       socket.off('private message');
     };
   }, [receiveUser, curMsg, msg]);
+
+  useEffect(() => {
+    async function getUser() {
+      let res = await http('api/user');
+      if (res.data.user) {
+        socket.emit('connectUser', res.data.user);
+        const { id, userName } = res.data.user;
+        setCurUser({
+          id,
+          userName
+        })
+        getMessage(id);
+      } else {
+        router.push('/login')
+      }
+    }
+    async function getMessage(id: string) {
+      let res = await http.get('api/message/getMessage', {
+        params: {
+          receiveId: id,
+          sendUserId: id
+        }
+      });
+      res.data.data.forEach((item: MsgType) => {
+        if (item.receiveId === id) {
+          if (!msg[item.sendUserId]) {
+            msg[item.sendUserId] = [];
+          }
+          msg[item.sendUserId].push(item);
+        } else {
+          if (!msg[item.receiveId]) {
+            msg[item.receiveId] = [];
+          }
+          msg[item.receiveId].push(item);
+        }
+      })
+      setMsg(Object.assign(msg));
+    }
+    getUser()
+  }, [msg])
 
   return (
     <Container className={'chat'} maxWidth="md">
@@ -98,6 +126,7 @@ export default function Index() {
                       toSockedId: item.socketId
                     })
                     setCurMsg(msg[item.userId] ? msg[item.userId].slice() : [])
+                    displayBottom();
                     setViewState({
                       disabled: false
                     })
@@ -155,7 +184,8 @@ export default function Index() {
                   receiveId: receiveUser.id,
                   receiveUser: receiveUser.userName,
                   sendUser: curUser.userName,
-                  sendUserId: curUser.id
+                  sendUserId: curUser.id,
+                  sendTime: +new Date()
                 }
                 socket.emit('private message', sendInfo)
                 if (!msg[receiveUser.id]) {
@@ -169,6 +199,7 @@ export default function Index() {
                 setViewState({
                   sendText: ''
                 })
+                http.post('api/message/sendMessage', sendInfo)
               }} variant="contained" color="primary">
                 发送
               </Button>

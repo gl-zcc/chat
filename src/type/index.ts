@@ -14,10 +14,11 @@ export type ViewInfo = {
 export type MsgType = {
   sendText?: string
   toSockedId?: string
-  receiveId?: string
+  receiveId: string
   receiveUser?: string
   sendUser?: string
-  sendUserId?: string
+  sendUserId: string
+  sendTime?: number
 }
 
 export type Msg = {
