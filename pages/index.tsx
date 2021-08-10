@@ -165,7 +165,7 @@ export default function Index() {
             }
           </div>
           <div className={'send-info'}>
-            <textarea disabled={viewState?.disabled}
+            <textarea disabled={viewState.disabled}
               value={viewState.sendText}
               onChange={e => setViewState({
                 sendText: e.target.value
@@ -176,7 +176,7 @@ export default function Index() {
             <div style={{
               float: 'right'
             }}>
-              <Button disabled={viewState?.disabled} onClick={e => {
+              <Button disabled={viewState.disabled} onClick={e => {
                 let sendInfo = {
                   sendText: viewState.sendText,
                   toSockedId: receiveUser.toSockedId,
