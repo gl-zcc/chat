@@ -17,6 +17,8 @@ import { io } from 'socket.io-client'
 import router from 'next/router'
 import { UserInfo, ViewInfo, MsgType, Msg, User } from '../src/type'
 
+import img1 from '../styles/images/1.jpg'
+
 const socket = io();
 
 export default function Index() {
@@ -118,22 +120,21 @@ export default function Index() {
             {receiveUser.userName}
           </div>
           <div className={'message'}>
-            {curMsg.map((item: any, key: number) => {
-              const direction = item.sendUserId === curUser.id ? 'right' : 'left'
-              return (<div key={key} className={`msg-${direction}`}>
-                <Avatar style={{
-                  float: direction
-                }} variant="rounded" alt="" src="" />
-                <div style={{
-                  textAlign: direction
-                }} className={'msg-user'}>
-                  {item.sendUser}
-                </div>
-                <div className={'msg-content'}>
-                  {item.sendText}
-                </div>
-              </div>)
-            })}
+            {
+              curMsg.map((item: any, key: number) => {
+                const direction = item.sendUserId === curUser.id ? 'receiver' : 'sender'
+                return (<div key={key} className={`chat-${direction}`}>
+                  <div>
+                    <img alt="" src={img1.src} />
+                  </div>
+                  <div>{item.sendUser}</div>
+                  <div>
+                    <div className={`chat-${direction}-triangle`}></div>
+                    <span>{item.sendText}</span>
+                  </div>
+                </div>)
+              })
+            }
           </div>
           <div className={'send-info'}>
             <textarea disabled={viewState?.disabled}
