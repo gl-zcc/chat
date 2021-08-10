@@ -37,11 +37,10 @@ export default function Index() {
     sendText: ''
   })
 
-
   useEffect(() => {
     viewInit()
     socket.on('userList', res => {
-      setUserList(res)
+      setUserList(res.filter((item: { userId: string; }) => item.userId !== curUser.id))
     })
     socket.on('private message', (res) => {
       if (!msg[res.sendUserId]) {
@@ -59,7 +58,7 @@ export default function Index() {
       socket.off('userList');
       socket.off('private message');
     };
-  }, [receiveUser, curMsg, msg]);
+  }, [receiveUser, curMsg, msg, curUser]);
 
   useEffect(() => {
     async function getUser() {
