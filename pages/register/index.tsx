@@ -15,6 +15,7 @@ import http from '../components/http';
 import router from 'next/router';
 import Snackbar, { SnackbarOrigin } from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import Header from '../components/layout/head';
 import { Alart as AlartType } from '../../src/type'
 
 function Alert(props: AlertProps) {
@@ -81,6 +82,7 @@ export default function SignUp() {
 
   return (
     <Container component="main" maxWidth="xs">
+      <Header title="注册" />
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
