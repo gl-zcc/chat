@@ -176,7 +176,7 @@ export default function Index() {
             <div style={{
               float: 'right'
             }}>
-              <Button disabled={viewState.disabled} onClick={e => {
+              <Button disabled={!Boolean(viewState.sendText)} onClick={() => {
                 let sendInfo = {
                   sendText: viewState.sendText,
                   toSockedId: receiveUser.toSockedId,
