@@ -18,6 +18,7 @@ app.prepare().then(() => {
   })
 
   io.on('connection', socket => {
+    console.log(socket.id)
     socket.on('connectUser', user => {
       console.log(`${user.userName}连接进来`);
       if (user) {
@@ -35,7 +36,7 @@ app.prepare().then(() => {
           });
         }
       }
-      io.volatile.emit('userList', userList);
+      io.emit('userList', userList);
     })
 
     socket.on('removeUser', name => {

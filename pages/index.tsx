@@ -11,6 +11,7 @@ import InputBase from '@material-ui/core/InputBase';
 import Button from '@material-ui/core/Button';
 
 import viewInit from '../src/viewInit'
+import { getMessage } from '../src/initData'
 import { displayBottom } from '../src/common'
 import http from '../pages/components/http'
 import { io } from 'socket.io-client'
@@ -40,7 +41,23 @@ export default function Index() {
   useEffect(() => {
     viewInit()
     socket.on('userList', res => {
-      setUserList(res.filter((item: { userId: string; }) => item.userId !== curUser.id))
+      getMessage(curUser.id).then(data=>{
+        data.forEach((item: MsgType) => {
+          if (item.receiveId === curUser.id) {
+            if (!msg[item.sendUserId]) {
+              msg[item.sendUserId] = [];
+            }
+            msg[item.sendUserId].push(item);
+          } else {
+            if (!msg[item.receiveId]) {
+              msg[item.receiveId] = [];
+            }
+            msg[item.receiveId].push(item);
+          }
+        })
+        setMsg(Object.assign(msg));
+        setUserList(res.filter((item: { userId: string; }) => item.userId !== curUser.id))
+      })
     })
     socket.on('private message', (res) => {
       if (!msg[res.sendUserId]) {
@@ -70,12 +87,12 @@ export default function Index() {
           id,
           userName
         })
-        getMessage(id);
+        // getMessage(id);
       } else {
         router.push('/login')
       }
     }
-    async function getMessage(id: string) {
+    /* async function getMessage(id: string) {
       let res = await http.get('api/message/getMessage', {
         params: {
           receiveId: id,
@@ -95,10 +112,11 @@ export default function Index() {
           msg[item.receiveId].push(item);
         }
       })
-      setMsg(Object.assign(msg));
-    }
+      console.log(msg);
+      setMsg(Object.assign(msg)); 
+    } */
     getUser()
-  }, [msg])
+  }, [])
 
   return (
     <Container className={'chat'} maxWidth="md">
